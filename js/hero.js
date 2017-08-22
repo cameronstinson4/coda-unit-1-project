@@ -72,7 +72,6 @@
 
 	Hero.prototype.move = function(up, right, down, left) {
 
-
 			if (right === true) {
 				this.velocity.x = 17;
 			}

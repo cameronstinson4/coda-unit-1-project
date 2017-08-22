@@ -1,6 +1,6 @@
 
-var		HERO_IMAGE = 'assets/hero.png',
-		PLATFORM_IMAGE = 'assets/long-ice-tile.png',
+var		HERO_IMAGE = 'assets/dog.png',
+		PLATFORM_IMAGE = 'assets/platform.png',
 		BASE_WIDTH = 800,
 		BASE_HEIGHT = 400,
 		GRID_HORIZONTAL = 8,
@@ -25,17 +25,17 @@ function _game()
 		ctx,
  		assets = [],
 		stage,
-		background,
-		background_2,
 		world,
 		hero,
-		keyDown = false		
+		keyDown = false,
 		key = {
           right: false,
           left: false,
           up: false,
           down: false
-		};
+		}, 
+		score = 0,
+		text;
 
 	self.width = w;
 	self.height = h;
@@ -95,6 +95,12 @@ function _game()
 
 		self.reset();
 
+		text = new createjs.Text("Score: ", "20px Courier New", "#0000ff");
+		text.x = 10;
+		text.y = 20;
+		text.textBaseline = "alphabetic";
+		stage.addChild(text);
+
 		// Setting the listeners
 		if ('ontouchstart' in document.documentElement) {
 			canvas.addEventListener('touchstart', function(e) {
@@ -121,7 +127,7 @@ function _game()
 		world.removeAllChildren();
 		world.x = world.y = 0;
 
-		hero.x = 50 * scale;
+		hero.x = 150 ;
 		hero.y = h/2 + 50 * scale;
 		hero.reset();
 		world.addChild(hero);
@@ -172,6 +178,13 @@ function _game()
 		}
 	
 		hero.move(key.up, key.right, key.down, key.left);
+		score = hero.x;
+
+		text.text = "Score: " + score;
+
+		if (score > 10000) {
+			self.onWin();
+		}
 
 		stage.update();
 	}
@@ -234,6 +247,16 @@ function _game()
 
 		keyDown = false;
 
+	}
+
+	self.onWin = function() {
+		world.removeAllChildren();
+		stage.removeAllChildren();
+		let text = new createjs.Text("You Win!", "20px Courier New", "#0000ff");
+		text.x = canvas.width/2;
+		text.y = canvas.height/2;
+		stage.addChild(text);
+		stage.update();
 	}
 
 	self.preloadResources();
