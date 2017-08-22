@@ -14,13 +14,13 @@
         this.snapToPixel = true;
     };
     Hero.prototype.reset = function() {
-    	this.velocity = {x:0*Game.scale,y:25*Game.scale};
+    	this.velocity = {x:0,y:1};
        	this.onGround = false;
 		this.doubleJump = false;
     };
 
 	Hero.prototype.tick = function () {
-		this.velocity.y += 1 * Game.scale;
+		this.velocity.y += 1;
 
 		// preparing the variables
 		var moveBy = {x:0, y:this.velocity.y},
@@ -57,7 +57,7 @@
     	// if the hero is "on the ground"
     	// let him jump, physically correct!
 		if ( this.onGround ) {
-			this.velocity.y = -17 * Game.scale;
+			this.velocity.y = -17;
 			this.onGround = false;
 			this.doubleJump = true;
 		// we want the hero to be able to
@@ -65,7 +65,7 @@
 		// air - after that, he has to wait
 		// to lang somewhere on the ground
 		} else if ( this.doubleJump ) {
-			this.velocity.y = -17 * Game.scale;
+			this.velocity.y = -17;
 			this.doubleJump = false;
 		}
 	};

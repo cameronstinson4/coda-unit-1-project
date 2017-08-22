@@ -12,14 +12,6 @@ function _game()
 	var self = this,
 		w = getWidth(),
 		h = getHeight(),
-		// to have a good looking scaling
-		// we will snap all values to 0.5-steps
-		// so 1.4 e.g. becomes 1.5 - you can also
-		// set the snapping to 1.0 e.g.
-		// however I would recommend to use only 
-		// a multiple of 0.5 - but play around
-		// with it and see the results
-		scale = snapValue(Math.min(w/BASE_WIDTH,h/BASE_HEIGHT),.5),
 		ticks = 0,
 		canvas,
 		ctx,
@@ -39,7 +31,6 @@ function _game()
 
 	self.width = w;
 	self.height = h;
-	self.scale = scale;
 
 	// holds all collideable objects
 	var collideables = [];
@@ -81,7 +72,7 @@ function _game()
 		canvas = document.createElement('canvas');
 		canvas.width = w;
 		canvas.height = h;
-		document.body.appendChild(canvas);
+		document.getElementById("board").appendChild(canvas);
 
 		// initializing the stage
 		stage = new createjs.Stage(canvas);
@@ -118,7 +109,7 @@ function _game()
 		}
 		
 		createjs.Ticker.addEventListener("tick", this.tick);
-		createjs.Ticker.setFPS(30);
+		createjs.Ticker.setFPS(60);
 	}
 
 	self.reset = function() {
@@ -128,18 +119,18 @@ function _game()
 		world.x = world.y = 0;
 
 		hero.x = 150 ;
-		hero.y = h/2 + 50 * scale;
+		hero.y = h/2 + 50;
 		hero.reset();
 		world.addChild(hero);
 
 		// add a platform for the hero to collide with
-		self.addPlatform(10 * scale, h/1.25);
+		self.addPlatform(10, h/1.25);
 
 		var c, l = w / (assets[PLATFORM_IMAGE].width * 1.5) + 2, atX=0, atY = h/1.25;
 
 		for ( c = 1; c < l; c++ ) {
 			var atX = (c-.5) * assets[PLATFORM_IMAGE].width*2 + (Math.random()*assets[PLATFORM_IMAGE].width-assets[PLATFORM_IMAGE].width/2);
-			var atY = atY + (Math.random() * 300 - 150) * scale;
+			var atY = atY + (Math.random() * 300 - 150);
 			self.addPlatform(atX,atY);
 		}
 	}
@@ -180,7 +171,7 @@ function _game()
 		hero.move(key.up, key.right, key.down, key.left);
 		score = hero.x;
 
-		text.text = "Score: " + score;
+		text.text = "Score: " + (score - ticks);
 
 		if (score > 10000) {
 			self.onWin();
@@ -210,7 +201,7 @@ function _game()
 	
 	self.movePlatformToEnd = function(platform) {
 		platform.x = self.lastPlatform.x + platform.image.width*2 + (Math.random()*platform.image.width*2 - platform.image.width);
-		platform.y = self.lastPlatform.y + (Math.random() * 300 - 150)* scale;
+		platform.y = self.lastPlatform.y + (Math.random() * 300 - 150);
 		self.lastPlatform = platform;
 	}
 
