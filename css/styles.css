@@ -4,5 +4,8 @@
     margin: 0px;
 }
 body {
+    background-image: url("../assets/snow.png");
+    position: absolute;
     background-color: #3f3f3f;
+
 }

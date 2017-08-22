@@ -67,7 +67,7 @@ function calculateCollision(obj, direction, collideables, moveBy)
     }
 
     if ( collision ) {
-      var sign = Math.abs(moveBy[direction]) / moveBy[direction];
+      var sign = Math.abs(moveBy[direction]) / moveBy[direction] !== NaN ? Math.abs(moveBy[direction]) : 1;
       moveBy[direction] -= collision[measure] * sign;
     }
 
@@ -100,9 +100,9 @@ function getBounds(obj) {
     if ( obj instanceof createjs.Bitmap ) {
       gp = obj.localToGlobal(0,0);
       imgr = {width:obj.image.width,height:obj.image.height};
-    } else if ( obj instanceof createjs.BitmapAnimation ) {
+    } else if ( obj instanceof createjs.Sprite ) {
       gp = obj.localToGlobal(0,0);
-      imgr = obj.spriteSheet._frames[obj.currentFrame];
+      imgr = {width: obj.spriteSheet.getFrameBounds(0).width, height:obj.spriteSheet.getFrameBounds(0).height};
     } else {
       return bounds;
     }
@@ -143,4 +143,22 @@ function getHeight() {
   } else if( document.body && ( document.body.clientHeight || document.body.clientHeight ) ) {
     return document.body.clientHeight;
   }
+}
+
+function collisionY(obj, collideables, velocity) {
+
+  for (var i = 0; i < collideables.length; i++) {
+    let objBounds = getBounds(obj);
+    let collideableBounds = getBounds(collideables[i]);
+
+    let intersection = calculateIntersection(objBounds, collideableBounds);
+    
+  }  
+
+  return false;
+}
+
+function collisionX(obj, collideables, velocity) {
+
+  return false;
 }

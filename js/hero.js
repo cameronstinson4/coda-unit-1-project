@@ -1,37 +1,46 @@
 (function (window) {
-    function Hero(image) {
-        this.initialize(image);
+    function Hero(spriteSheet) {
+        this.initialize(spriteSheet);
     }
-    Hero.prototype = new createjs.Bitmap();
+    Hero.prototype = new createjs.Sprite();
 
-    Hero.prototype.Bitmap_initialize = Hero.prototype.initialize;
+    Hero.prototype.Sprite_initialize = Hero.prototype.initialize;
    
-    Hero.prototype.initialize = function (image) {
+    Hero.prototype.initialize = function (spriteSheet) {
        	this.reset();
 
-        this.Bitmap_initialize(image);
+        this.Sprite_initialize(spriteSheet);
         this.name = 'Hero';
         this.snapToPixel = true;
-    };
+	};
+
     Hero.prototype.reset = function() {
     	this.velocity = {x:0,y:0};
     };
 
 	Hero.prototype.tick = function () {
 
-		this.velocity.y += 5;
+		this.velocity.y += 1;
+		var collision = null;
 
 		// preparing the variables
-		var moveBy = {x:0, y:this.velocity.y},
-			collision = null,
-			collideables = Game.getCollideables();
+		collideables = Game.getCollideables();
 
-		collision = calculateCollision(this, 'y', collideables, moveBy);
-		this.y += moveBy.y;
+		// collision = calculateCollision(this, 'y', collideables, moveBy);
+		// this.y += moveBy.y;
 
-		moveBy = {x:this.velocity.x, y:0};
-		collision = calculateCollision(this, 'x', collideables, moveBy);
-		this.x += moveBy.x;
+		// moveBy = {x:this.velocity.x, y:0};
+		// collision = calculateCollision(this, 'x', collideables, moveBy);
+		// this.x += moveBy.x;
+
+		if (!collisionX(this, collideables, this.velocity.x)) {
+			this.x += this.velocity.x;
+
+		}
+		if (!collisionY(this, collideables, this.velocity.y)) {
+			this.y += this.velocity.y;
+
+		}
 	};
 
 	Hero.prototype.move = function(up, right, down, left) {

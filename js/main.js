@@ -1,6 +1,7 @@
-const	HERO_IMAGE = 'assets/hero.png',
-		PLATFORM_IMAGE = 'assets/platform.png',
-		WALL_IMAGE = 'assets/wall-sprites.png';
+const	HERO_IMAGE = 'assets/Dog_1.png',
+		PLATFORM_IMAGE = 'assets/long-ice-tile.png',
+		WALL_IMAGE = 'assets/wall-sprites.png',
+		BG_IMAGE = 'assets/snow.png';
 
 function _game()
 {
@@ -31,6 +32,7 @@ function _game()
 		self.loadImage(HERO_IMAGE);
 		self.loadImage(PLATFORM_IMAGE);
 		self.loadImage(WALL_IMAGE);
+		self.loadImage(BG_IMAGE);
 	}
 
 	var requestedAssets = 0,
@@ -71,7 +73,7 @@ function _game()
 
 		// creating the Hero, and assign an image
 		// also position the hero in the middle of the screen
-		hero = new Hero(assets[HERO_IMAGE]);
+		hero = new Hero(dog());
 
 		self.reset();
 
@@ -106,13 +108,10 @@ function _game()
 		hero.reset();
 		world.addChild(hero);
 
-		var numPlatforms = Math.ceil(canvas.width / assets[PLATFORM_IMAGE].width) + 1;
-
-		// add a platform for the hero to collide with
-		//self.addPlatform(50 - assets[PLATFORM_IMAGE].width/2, h/1.25);
+		var numPlatforms = Math.ceil(canvas.width / assets[PLATFORM_IMAGE].width) + 10;
 
 		for ( var i = 0; i < numPlatforms; i++ ) {
-			var atX = assets[PLATFORM_IMAGE].width*i;
+			var atX = assets[PLATFORM_IMAGE].width*i * 0.2;
 			var atY = h/1.25;
 			self.addPlatform(atX,atY);
 		}
@@ -154,26 +153,9 @@ function _game()
 		x = Math.round(x);
 		y = Math.round(y);
 
-		var spriteSheet = new createjs.SpriteSheet({
-			images: ["assets/wall-sprites.png"],
-			frames: {width:16, height:16},
-			animations: {
-				run: [0, 1]
-			}
-		});
-		var animation = new createjs.Sprite(spriteSheet, "run");
-
-		animation.play();	
-		animation.x = 100;
-		animation.y = 100;
-		spriteSheet.getAnimation("run").frequency = 0;
-		spriteSheet.getAnimation("run").next = "run";
-		animation.gotoAndStop("run");
-		stage.addChild(animation);
-
-		//var wallImage = createjs.SpriteSheetUtils.extractFrame(wallSheet, 0);
-
 		var platform = new createjs.Bitmap(assets[PLATFORM_IMAGE]);
+		platform.scaleX = 0.2;
+		platform.scaleY = 0.2;
 		platform.x = x;
 		platform.y = y;
 		platform.snapToPixel = true;
