@@ -25,6 +25,8 @@ function calculateIntersection(rect1, rect2, x, y)
 function calculateCollision(obj, direction, collideables, moveBy)
 {
       moveBy = moveBy || {x:0,y:0};
+      //moveBy.x = Math.ceil(moveBy.x);
+      //moveBy.y = Math.ceil(moveBy.y);
       if ( direction != 'x' && direction != 'y' ) {
         direction = 'x';
       }
@@ -32,7 +34,7 @@ function calculateCollision(obj, direction, collideables, moveBy)
         oppositeDirection = direction == 'x' ? 'y' : 'x',
         oppositeMeasure = direction == 'x' ? 'height' : 'width',
 
-        bounds = getBounds(obj),
+        bounds = getBounds(obj,true),
         cbounds,
         collision = null,
         cc = 0;
@@ -41,7 +43,7 @@ function calculateCollision(obj, direction, collideables, moveBy)
     // bounding-rectangle and then check for an intersection
     // of the hero's future position's bounding-rectangle
     while ( !collision && cc < collideables.length ) {
-      cbounds = getBounds(collideables[cc]);
+      cbounds = getBounds(collideables[cc], true);
       if ( collideables[cc].isVisible ) {
         collision = calculateIntersection(bounds, cbounds, moveBy.x, moveBy.y);
       }
@@ -67,7 +69,7 @@ function calculateCollision(obj, direction, collideables, moveBy)
     }
 
     if ( collision ) {
-      var sign = Math.abs(moveBy[direction]) / moveBy[direction] !== NaN ? Math.abs(moveBy[direction]) : 1;
+      var sign = Math.abs(moveBy[direction]) / moveBy[direction];
       moveBy[direction] -= collision[measure] * sign;
     }
 
@@ -83,7 +85,7 @@ function calculateCollision(obj, direction, collideables, moveBy)
  * @param {DisplayObject} the object to calculate the bounds from
  * @return {Rectangle} The rectangle describing the bounds of the object
  */
-function getBounds(obj) {
+function getBounds(obj,rounded) {
   var bounds={x:Infinity,y:Infinity,width:0,height:0};
   
   if ( obj instanceof createjs.Container ) {
@@ -102,7 +104,7 @@ function getBounds(obj) {
       imgr = {width:obj.image.width,height:obj.image.height};
     } else if ( obj instanceof createjs.Sprite ) {
       gp = obj.localToGlobal(0,0);
-      imgr = {width: obj.spriteSheet.getFrameBounds(0).width, height:obj.spriteSheet.getFrameBounds(0).height};
+      imgr = obj.spriteSheet._frames[obj.currentFrame];
     } else {
       return bounds;
     }
@@ -121,8 +123,73 @@ function getBounds(obj) {
       bounds.y = gp.y - bounds.height;
     }
   }
-
+  if ( rounded ) {
+    bounds.x = (bounds.x + (bounds.x > 0 ? .5 : -.5)) | 0;
+    bounds.y = (bounds.y + (bounds.y > 0 ? .5 : -.5)) | 0;
+    bounds.width = (bounds.width + (bounds.width > 0 ? .5 : -.5)) | 0;
+    bounds.height = (bounds.height + (bounds.height > 0 ? .5 : -.5)) | 0;
+  }
   return bounds;
+}
+
+function nearestNeighborScale(img, scale)
+{
+  // to have a good looking scaling
+  // we will snap all values to 0.5-steps
+  // so 1.4 e.g. becomes 1.5 - you can also
+  // set the snapping to 1.0 e.g.
+  // however I would recommend to use only 
+  // a multiple of 0.5 - but play around
+  // with it and see the results
+  scale = snapValue(scale,.5);
+  if ( scale <= 0 ) scale = 0.5;
+
+  // the size of the "pixels" in the new images
+  // will be rounden to integer values, as drawing
+  // a rect with 1.5x1.5 would result in half-transparent
+  // areas
+  var pixelSize = (scale+0.99) | 0;
+
+  // getting the data-array containing all the pixel-data
+  // from our source-image
+  var src_canvas = document.createElement('canvas');
+  src_canvas.width = img.width;
+  src_canvas.height = img.height;
+  var src_ctx = src_canvas.getContext('2d');
+  src_ctx.drawImage(img, 0, 0);
+  var src_data = src_ctx.getImageData(0, 0, img.width, img.height).data;
+  
+  // setting up the new, scaled image
+  var dst_canvas = document.createElement('canvas');
+  // just to be sure, that no pixel gets lost, when
+  // we scale the image down, we add 1 and floor the
+  // result
+  dst_canvas.width = (img.width * scale+1) | 0;
+  dst_canvas.height = (img.height * scale+1) | 0;
+  var dst_ctx = dst_canvas.getContext('2d');
+
+  // reading each pixel-data from the source
+  // and drawing a scaled version of that pixel
+  // to the new canvas
+  var offset = 0;
+  for (var y = 0; y < img.height; ++y) {
+      for (var x = 0; x < img.width; ++x) {
+          var r = src_data[offset++];
+          var g = src_data[offset++];
+          var b = src_data[offset++];
+          var a = src_data[offset++] / 255;
+          dst_ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+          dst_ctx.fillRect(x * scale, y * scale, pixelSize, pixelSize);
+      }
+  }
+
+  return dst_canvas;
+}
+
+function snapValue(value,snap)
+{
+  var roundedSnap = (value/snap + (value > 0 ? .5 : -.5)) | 0;
+  return roundedSnap * snap;
 }
 
 function getWidth() {
@@ -143,22 +210,4 @@ function getHeight() {
   } else if( document.body && ( document.body.clientHeight || document.body.clientHeight ) ) {
     return document.body.clientHeight;
   }
-}
-
-function collisionY(obj, collideables, velocity) {
-
-  for (var i = 0; i < collideables.length; i++) {
-    let objBounds = getBounds(obj);
-    let collideableBounds = getBounds(collideables[i]);
-
-    let intersection = calculateIntersection(objBounds, collideableBounds);
-    
-  }  
-
-  return false;
-}
-
-function collisionX(obj, collideables, velocity) {
-
-  return false;
 }
