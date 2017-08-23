@@ -3,6 +3,7 @@ var		HERO_IMAGE = 'assets/dog.png',
 		PLATFORM_IMAGE = 'assets/platform.png',
 		BACKGROUND_IMAGE = "assets/snow.png",
 		PARALLAX_IMAGE = "assets/snowflakes.png",
+		NPC_IMAGE = "assets/cat.png",
 		BASE_WIDTH = 800,
 		BASE_HEIGHT = 400,
 		GRID_HORIZONTAL = 8,
@@ -30,7 +31,8 @@ function _game()
 		}, 
 		score = 0,
 		text,
-		background;
+		background,
+		npcs = [];
 
 	self.width = w;
 	self.height = h;
@@ -45,6 +47,8 @@ function _game()
 		self.loadImage(PLATFORM_IMAGE);
 		self.loadImage(BACKGROUND_IMAGE);
 		self.loadImage(PARALLAX_IMAGE);
+		self.loadImage(NPC_IMAGE);
+
 	}
 
 	var requestedAssets = 0,
@@ -90,6 +94,7 @@ function _game()
 		// creating the Hero, and assign an image
 		// also position the hero in the middle of the screen
 		hero = new Hero(assets[HERO_IMAGE]);
+		npcs.push(new Character(assets[NPC_IMAGE]));
 
 		self.reset();
 
@@ -129,6 +134,13 @@ function _game()
 		hero.y = h/2 + 50;
 		hero.reset();
 		world.addChild(hero);
+		
+		for (var i = 0; i < npcs.length; i++) {
+			npcs[i].x = 150 ;
+			npcs[i].y = h/2 + 50;
+			npcs[i].reset();
+			world.addChild(npcs[i]);
+		}
 
 		// add a platform for the hero to collide with
 		self.addPlatform(10, h/1.25);
@@ -148,6 +160,11 @@ function _game()
 
 		ticks++;
 		hero.tick();
+		for (var i = 0; i < npcs.length; i++) {
+			npcs[i].ticks = ticks;
+			npcs[i].tick();
+		}
+
 
 		if ( hero.y > h*3 ) {
 			self.reset();
@@ -176,31 +193,18 @@ function _game()
 		}
 	
 		hero.move(key.up, key.right, key.down, key.left);
-		score = hero.x;
 
-		text.text = "Score: " + (score - ticks);
+		score = hero.x - ticks;
+
+		text.text = "Score: " + score;
 
 		if (score > 10000) {
 			self.onWin();
 		}
+
 		self.updateBg();
 
 		stage.update();
-	}
-
-	self.updateBg = function() {
-
-		background.x = (world.x * .30); // horizontal
-
-		for (var i = 0; i < background.children.length; i++) {
-			if ( background.children[i].localToGlobal(background.children[i].image.width,0).x < self.width ) {
-				let bitmap = new createjs.Bitmap(background.children[i].image.src);
-				bitmap.x = background.children[i].x + background.children[i].image.width;
-				background.addChild(bitmap);
-			}
-
-			background.children[i].x = (world.x * .20 * (i+1));
-		}
 	}
 
 	// this method adds a platform at the
@@ -226,7 +230,33 @@ function _game()
 		platform.x = self.lastPlatform.x + platform.image.width*2 + (Math.random()*platform.image.width*2 - platform.image.width);
 		platform.y = self.lastPlatform.y + (Math.random() * 300 - 150);
 		self.lastPlatform = platform;
+	}	
+
+	self.setupBg = function() {
+		var bg = new createjs.Container();
+		bg.snapToPixel = true;
+		var bitmap = new createjs.Bitmap(assets[BACKGROUND_IMAGE]);
+
+		bg.addChild(bitmap);
+
+		bitmap = new createjs.Bitmap(assets[PARALLAX_IMAGE]);
+
+		bg.addChild(bitmap);
+
+		stage.addChild(bg);
+
+		// return the background
+		return bg;
+	}	
+
+	self.updateBg = function() {
+
+		for (var i = 0; i < background.children.length; i++) {
+
+			background.children[i].x = (world.x * .02 * (i + 1)) + background.children[i].regX;
+		}
 	}
+	
 
 	self.handleKeyDown = function(e)
 	{
@@ -271,26 +301,8 @@ function _game()
 		text.y = canvas.height/2;
 		stage.addChild(text);
 		stage.update();
+		stage.tickEnabled = false;
 	}
-
-	self.setupBg = function() {
-		var bg = new createjs.Container();
-		bg.snapToPixel = true;
-		var bitmap = new createjs.Bitmap(assets[BACKGROUND_IMAGE]);
-
-		bg.addChild(bitmap);
-		bitmap = new createjs.Bitmap(assets[PARALLAX_IMAGE]);
-
-		bg.addChild(bitmap);
-
-		bg.width = bitmap.image.width;
-		bg.height = bitmap.image.height;
-
-		stage.addChild(bg);
-
-		// return the background
-		return bg;
-}
 
 	self.preloadResources();
 	
