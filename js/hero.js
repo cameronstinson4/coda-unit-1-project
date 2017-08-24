@@ -2,16 +2,18 @@
     function Hero(image) {
         this.initialize(image);
     }
-    Hero.prototype = new createjs.Bitmap();
+    Hero.prototype = new createjs.Sprite();
 
-    Hero.prototype.Bitmap_initialize = Hero.prototype.initialize;
+    Hero.prototype.Sprite_initialize = Hero.prototype.initialize;
    
-    Hero.prototype.initialize = function (image) {
+    Hero.prototype.initialize = function (spriteSheet) {
        	this.reset();
 
-        this.Bitmap_initialize(image);
+        this.Sprite_initialize(spriteSheet);
         this.name = 'Hero';
-        this.snapToPixel = true;
+		this.snapToPixel = true;
+		this.gotoAndPlay("run");
+
     };
     Hero.prototype.reset = function() {
     	this.velocity = {x:0,y:1};
@@ -74,11 +76,17 @@
 
 			if (right === true) {
 				this.velocity.x = 17;
+				this.spriteSheet = rightDog();
+				this.play();
 			}
 			else if (left === true) {
 				this.velocity.x = -17;
+				this.spriteSheet = leftDog();
+				this.play();
+
 			}
 			else {
+				this.stop();
 				this.velocity.x = 0;
 			}
 		}

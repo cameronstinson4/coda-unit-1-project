@@ -5,6 +5,8 @@ var		HERO_IMAGE = 'assets/dog.png',
 		PARALLAX_IMAGE = "assets/snowflakes.png",
 		NPC_IMAGE = "assets/cat.png";
 		START_PLATFORM_IMAGE = "assets/start-platform.png";
+		DOG_SPRITES_RIGHT = "assets/dog-sprites-right.png";
+		DOG_SPRITES_LEFT = "assets/dog-sprites-left.png";
 
 function _game()
 {
@@ -41,8 +43,8 @@ function _game()
 		self.loadImage(PARALLAX_IMAGE);
 		self.loadImage(NPC_IMAGE);		
 		self.loadImage(START_PLATFORM_IMAGE);
-
-
+		self.loadImage(DOG_SPRITES_LEFT);
+		self.loadImage(DOG_SPRITES_RIGHT);
 	}
 
 	var requestedAssets = 0;
@@ -87,7 +89,7 @@ function _game()
 
 		// creating the Hero, and assign an image
 		// also position the hero in the middle of the screen
-		hero = new Hero(assets[HERO_IMAGE]);
+		hero = new Hero(rightDog());
 		npcs.push(new Character(assets[NPC_IMAGE]));
 
 		self.reset();

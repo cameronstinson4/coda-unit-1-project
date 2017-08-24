@@ -25,8 +25,7 @@ function calculateIntersection(rect1, rect2, x, y)
 function calculateCollision(obj, direction, collideables, moveBy)
 {
       moveBy = moveBy || {x:0,y:0};
-      //moveBy.x = Math.ceil(moveBy.x);
-      //moveBy.y = Math.ceil(moveBy.y);
+
       if ( direction != 'x' && direction != 'y' ) {
         direction = 'x';
       }
@@ -105,6 +104,7 @@ function getBounds(obj,rounded) {
     } else if ( obj instanceof createjs.Sprite ) {
       gp = obj.localToGlobal(0,0);
       imgr = obj.spriteSheet._frames[obj.currentFrame];
+
     } else {
       return bounds;
     }
