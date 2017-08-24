@@ -1,12 +1,30 @@
-* {
-
-}
-
 html {
   height: 100%;
   overflow-y: hidden;
   overflow-x: scroll;
 }
+.board {
+    height: 100%;
+}
+.mobileControls {
+    height: 0%;
+    display: none;
+}
+
+@media only screen and (max-width: 500px) {
+
+    .board {
+        height: 80%;
+    }
+    .mobileControls {
+        height: 20%;
+        display: inline-block;
+        z-index: 100;
+        background-color: black;
+    }
+
+}
+
 /*
 body { 
     margin:0;

@@ -1,6 +1,6 @@
 
 var		HERO_IMAGE = 'assets/dog.png',
-		PLATFORM_IMAGE = 'assets/platform.png',
+		PLATFORM_IMAGE = 'assets/cobble-platform.png',
 		BACKGROUND_IMAGE = "assets/snow.png",
 		PARALLAX_IMAGE = "assets/snowflakes.png",
 		NPC_IMAGE = "assets/cat.png",
@@ -17,7 +17,6 @@ function _game()
 		h = getHeight(),
 		ticks = 0,
 		canvas,
-		ctx,
  		assets = [],
 		stage,
 		world,
@@ -30,7 +29,7 @@ function _game()
           down: false
 		}, 
 		score = 0,
-		text,
+		scoreboard,
 		background,
 		npcs = [];
 
@@ -95,14 +94,15 @@ function _game()
 		// also position the hero in the middle of the screen
 		hero = new Hero(assets[HERO_IMAGE]);
 		npcs.push(new Character(assets[NPC_IMAGE]));
+		collideables.push(npcs[0]);
 
 		self.reset();
 
-		text = new createjs.Text("Score: ", "20px Courier New", "#0000ff");
-		text.x = 10;
-		text.y = 20;
-		text.textBaseline = "alphabetic";
-		stage.addChild(text);
+		scoreboard = new createjs.Text("Score: ", "20px Courier New", "#0000ff");
+		scoreboard.x = 10;
+		scoreboard.y = 20;
+		scoreboard.textBaseline = "alphabetic";
+		stage.addChild(scoreboard);
 
 		// Setting the listeners
 		if ('ontouchstart' in document.documentElement) {
@@ -120,8 +120,14 @@ function _game()
 			document.onmouseup = self.handleKeyUp;
 		}
 
+		self.createStartingPlatform();
+
 		createjs.Ticker.addEventListener("tick", this.tick);
 		createjs.Ticker.setFPS(60);
+	}
+
+	self.createStartingPlatform = function() {
+
 	}
 
 	self.reset = function() {
@@ -196,11 +202,16 @@ function _game()
 
 		score = hero.x - ticks;
 
-		text.text = "Score: " + score;
+		scoreboard.text = "Score: " + score;
 
 		if (score > 10000) {
 			self.onWin();
 		}
+		
+		canvas.width = getWidth();
+		canvas.height = document.getElementById("board").offsetHeight;
+		w = canvas.width;
+		h = canvas.height;
 
 		self.updateBg();
 
@@ -260,6 +271,9 @@ function _game()
 
 	self.handleKeyDown = function(e)
 	{
+		if (e instanceof MouseEvent) {
+			hero.jump();
+		}
 
 		if (e.keyCode === 39) {
 			key.right = true;
@@ -267,9 +281,7 @@ function _game()
 			key.left = true;
 		}
 		if (e.keyCode === 38 || e.keyCode === 13) {
-			keyDown = true;
 			hero.jump();
-			key.up = true;
 		} else if (e.keyCode === 40) {
 			key.down = true;
 		}
@@ -277,16 +289,10 @@ function _game()
 
 	self.handleKeyUp = function(e)
 	{
-		
 		if (e.keyCode === 39) {
 			key.right = false;
 		} else if (e.keyCode === 37) {
 			key.left = false;
-		}
-		if (e.keyCode === 38) {
-			key.up = false;
-		} else if (e.keyCode === 40) {
-			key.down = false;
 		}
 
 		keyDown = false;
@@ -296,10 +302,10 @@ function _game()
 	self.onWin = function() {
 		world.removeAllChildren();
 		stage.removeAllChildren();
-		let text = new createjs.Text("You Win!", "20px Courier New", "#0000ff");
-		text.x = canvas.width/2;
-		text.y = canvas.height/2;
-		stage.addChild(text);
+		let win = new createjs.Text("You Win!", "20px Courier New", "#0000ff");
+		win.x = canvas.width/2;
+		win.y = canvas.height/2;
+		stage.addChild(win);
 		stage.update();
 		stage.tickEnabled = false;
 	}

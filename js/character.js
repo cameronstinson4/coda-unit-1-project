@@ -22,7 +22,7 @@
     };
 
 	Character.prototype.tick = function () {
-        //this.velocity.y += 1;
+        this.velocity.y += 1;
         
         if (this.right === true) {
             this.velocity.x = 2;
@@ -62,6 +62,7 @@
         this.x += moveBy.x;
         
         if (this.ticks % 100 === 0) {
+            
             if (this.left) {
                 this.right = true;
                 this.left = false;
