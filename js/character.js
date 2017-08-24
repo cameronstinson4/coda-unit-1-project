@@ -13,6 +13,7 @@
         this.snapToPixel = true;
         this.left = false;
         this.right = true;
+        this.ticks = 0;
     };
 
     Character.prototype.reset = function() {
@@ -21,6 +22,7 @@
     };
 
 	Character.prototype.tick = function () {
+        this.ticks++;
         this.velocity.y += 1;
         
         if (this.right === true) {

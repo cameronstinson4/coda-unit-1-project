@@ -1,6 +1,6 @@
 
 var		HERO_IMAGE = 'assets/dog.png',
-		PLATFORM_IMAGE = 'assets/platform.png',
+		PLATFORM_IMAGE = 'assets/cobble-platform.png',
 		BACKGROUND_IMAGE = "assets/snow.png",
 		PARALLAX_IMAGE = "assets/snowflakes.png",
 		NPC_IMAGE = "assets/cat.png";
