@@ -4,6 +4,7 @@ var		HERO_IMAGE = 'assets/dog.png',
 		BACKGROUND_IMAGE = "assets/snow.png",
 		PARALLAX_IMAGE = "assets/snowflakes.png",
 		NPC_IMAGE = "assets/cat.png";
+		START_PLATFORM_IMAGE = "assets/start-platform.png";
 
 function _game()
 {
@@ -25,7 +26,8 @@ function _game()
 		score = 0,
 		scoreboard,
 		background,
-		npcs = [];
+		npcs = [],
+		platforms = [];
 
 	// holds all collideable objects
 	var collideables = [];
@@ -37,7 +39,9 @@ function _game()
 		self.loadImage(PLATFORM_IMAGE);
 		self.loadImage(BACKGROUND_IMAGE);
 		self.loadImage(PARALLAX_IMAGE);
-		self.loadImage(NPC_IMAGE);
+		self.loadImage(NPC_IMAGE);		
+		self.loadImage(START_PLATFORM_IMAGE);
+
 
 	}
 
@@ -85,7 +89,6 @@ function _game()
 		// also position the hero in the middle of the screen
 		hero = new Hero(assets[HERO_IMAGE]);
 		npcs.push(new Character(assets[NPC_IMAGE]));
-		collideables.push(npcs[0]);
 
 		self.reset();
 
@@ -94,12 +97,8 @@ function _game()
 		scoreboard.y = 20;
 		scoreboard.textBaseline = "alphabetic";
 		stage.addChild(scoreboard);
-
-		// Setting the listeners
 	
 		self.setupListeners();
-
-		self.createStartingPlatform();
 
 		createjs.Ticker.addEventListener("tick", this.tick);
 		createjs.Ticker.setFPS(60);
@@ -150,7 +149,11 @@ function _game()
 	}
 
 	self.createStartingPlatform = function() {
-
+		var startPlatform = new createjs.Bitmap(assets[START_PLATFORM_IMAGE]);
+		startPlatform.x = 0;
+		startPlatform.y = canvas.height/2 + 200;
+		collideables.push(startPlatform);
+		world.addChild(startPlatform);
 	}
 
 	self.reset = function() {
@@ -165,22 +168,24 @@ function _game()
 		hero.reset();
 		world.addChild(hero);
 		
-		for (var i = 0; i < npcs.length; i++) {
+		for (let i = 0; i < npcs.length; i++) {
 			npcs[i].x = 150 ;
 			npcs[i].y = canvas.height/2 + 50;
 			npcs[i].reset();
 			world.addChild(npcs[i]);
 		}
 
-		// add a platform for the hero to collide with
-		self.addPlatform(10, canvas.height/1.25);
+		self.createStartingPlatform();
+
+		// add first platform for the hero to collide with
+		self.addPlatform(1000, canvas.height/1.25);
 
 		var length = canvas.width / (assets[PLATFORM_IMAGE].width * 1.5) + 2;
 		var atX = 0;
 		var atY = canvas.height/1.25;
 
 		for ( let i = 1; i < length; i++ ) {
-			var atX = (i-.5) * assets[PLATFORM_IMAGE].width*2 + (Math.random()*assets[PLATFORM_IMAGE].width-assets[PLATFORM_IMAGE].width/2);
+			var atX = (i-.5) * assets[PLATFORM_IMAGE].width*2 + (Math.random()*assets[PLATFORM_IMAGE].width-assets[PLATFORM_IMAGE].width/2) + 1000;
 			var atY = atY + (Math.random() * 300 - 150);
 			self.addPlatform(atX,atY);
 		}
@@ -203,8 +208,8 @@ function _game()
 
 		self.adjustCamera();
 
-		for ( var i = 0; i < collideables.length; i++ ) {
-			let c = collideables[i];
+		for ( var i = 0; i < platforms.length; i++ ) {
+			let c = platforms[i];
 			if ( c.localToGlobal(c.image.width,0).x < -10 ) {
 				self.movePlatformToEnd(c);
 			}
@@ -258,6 +263,7 @@ function _game()
 
 		world.addChild(platform);
 		collideables.push(platform);
+		platforms.push(platform);
 		self.lastPlatform = platform;
 	}
 	//When a platform goes out of sight, add it to the front
@@ -291,6 +297,8 @@ function _game()
 		for (var i = 0; i < background.children.length; i++) {
 
 			background.children[i].x = (world.x * .02 * (i + 1)) + background.children[i].regX;
+			background.children[i].y = (world.y * .02 * (i + 1)) + background.children[i].regY;
+
 		}
 	}
 	
