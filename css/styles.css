@@ -18,8 +18,10 @@ html {
 button {
     text-decoration: none;
     height: 100%;
-    width: 30%;
+    width: 32%;
     background-color: #4286f4;
+    border: none;
+    margin: .25em;
 }
 
 @media only screen and (max-width: 480px) {

@@ -114,22 +114,16 @@ function _game()
 		createjs.Ticker.setFPS(60);
 	}
 	self.setupListeners = function() {
+		//Setup keyboard listeners
 		document.onkeydown = self.handleKeyDown;
 		document.onkeyup = self.handleKeyUp;
 
-		// document.getElementById("left").addEventListener("onmousedown", function() { key.left = true});
-		// document.getElementById("left").addEventListener("onmouseup", function() { key.left = false});
-		// document.getElementById("right").addEventListener("onmousedown", function() { key.right = true});
-		// document.getElementById("left").addEventListener("onmouseup", function() { key.right = false});
-
+		//setup touch listeners
 		if ('ontouchstart' in document.documentElement) {
-			document.getElementById("left").addEventListener('touchstart', function(e) {
-				key.left = true
-			}, false);
-
-			document.getElementById("right").addEventListener('touchend', function(e) {
-				key.right = true
-			}, false);
+			document.getElementById("left").addEventListener('touchstart', function(e) { key.left = true });
+			document.getElementById("left").addEventListener('touchend', function(e) { key.left = false });
+			document.getElementById("right").addEventListener('touchstart', function(e) { key.right = true });
+			document.getElementById("right").addEventListener('touchend', function(e) { key.right = false });
 		}
 
 		document.getElementById("jump").addEventListener("click", function() { hero.jump()});
