@@ -201,18 +201,7 @@ function _game()
 			return;
 		}
 
-		// if the hero "leaves" it's bounds of
-		// screenWidth * 0.3 and screenHeight * 0.3(to both ends)
-		// we will reposition the "world-container", so our hero
-		// is allways visible
-		if ( hero.x > canvas.width*.3 ) {
-			world.x = -hero.x + canvas.width*.3;
-		}
-		if ( hero.y > canvas.height*.7 ) {
-			world.y = -hero.y + canvas.height*.7;
-		} else if ( hero.y < canvas.height*.3 ) {
-			world.y = -hero.y + canvas.height*.3;
-		}
+		self.adjustCamera();
 
 		for ( var i = 0; i < collideables.length; i++ ) {
 			let c = collideables[i];
@@ -238,6 +227,21 @@ function _game()
 		stage.update();
 	}
 
+	self.adjustCamera = function() {
+		// if the hero "leaves" it's bounds of
+		// screenWidth * 0.3 and screenHeight * 0.3(to both ends)
+		// we will reposition the "world-container", so our hero
+		// is allways visible
+		if ( hero.x > canvas.width*.3 ) {
+			world.x = -hero.x + canvas.width*.3;
+		}
+		if ( hero.y > canvas.height*.6 ) {
+			world.y = -hero.y + canvas.height*.6;
+		} else if ( hero.y < canvas.height*.4 ) {
+			world.y = -hero.y + canvas.height*.4;
+		}
+	}
+
 	// this method adds a platform at the
 	// given x- and y-coordinates and adds
 	// it to the collideables-array
@@ -256,7 +260,7 @@ function _game()
 		collideables.push(platform);
 		self.lastPlatform = platform;
 	}
-	
+	//When a platform goes out of sight, add it to the front
 	self.movePlatformToEnd = function(platform) {
 		platform.x = self.lastPlatform.x + platform.image.width*2 + (Math.random()*platform.image.width*2 - platform.image.width);
 		platform.y = self.lastPlatform.y + (Math.random() * 300 - 150);

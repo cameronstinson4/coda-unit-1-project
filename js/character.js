@@ -10,15 +10,14 @@
        	this.reset();
 
         this.Bitmap_initialize(image);
-        this.name = 'Cat';
         this.snapToPixel = true;
         this.left = false;
         this.right = true;
     };
+
     Character.prototype.reset = function() {
     	this.velocity = {x:0,y:0};
        	this.onGround = false;
-		this.doubleJump = false;
     };
 
 	Character.prototype.tick = function () {
