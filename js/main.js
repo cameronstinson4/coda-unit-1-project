@@ -105,27 +105,36 @@ function _game()
 		stage.addChild(scoreboard);
 
 		// Setting the listeners
-		if ('ontouchstart' in document.documentElement) {
-			canvas.addEventListener('touchstart', function(e) {
-				self.handleKeyDown();
-			}, false);
-
-			canvas.addEventListener('touchend', function(e) {
-				self.handleKeyUp();
-			}, false);
-		} else {
-			document.onkeydown = self.handleKeyDown;
-			document.onkeyup = self.handleKeyUp;
-			document.onmousedown = self.handleKeyDown;
-			document.onmouseup = self.handleKeyUp;
-		}
+	
+		self.setupListeners();
 
 		self.createStartingPlatform();
 
 		createjs.Ticker.addEventListener("tick", this.tick);
 		createjs.Ticker.setFPS(60);
 	}
+	self.setupListeners = function() {
+		document.onkeydown = self.handleKeyDown;
+		document.onkeyup = self.handleKeyUp;
 
+		// document.getElementById("left").addEventListener("onmousedown", function() { key.left = true});
+		// document.getElementById("left").addEventListener("onmouseup", function() { key.left = false});
+		// document.getElementById("right").addEventListener("onmousedown", function() { key.right = true});
+		// document.getElementById("left").addEventListener("onmouseup", function() { key.right = false});
+
+		if ('ontouchstart' in document.documentElement) {
+			document.getElementById("left").addEventListener('touchstart', function(e) {
+				key.left = true
+			}, false);
+
+			document.getElementById("right").addEventListener('touchend', function(e) {
+				key.right = true
+			}, false);
+		}
+
+		document.getElementById("jump").addEventListener("click", function() { hero.jump()});
+
+	}
 	self.createStartingPlatform = function() {
 
 	}
@@ -271,10 +280,6 @@ function _game()
 
 	self.handleKeyDown = function(e)
 	{
-		if (e instanceof MouseEvent) {
-			hero.jump();
-		}
-
 		if (e.keyCode === 39) {
 			key.right = true;
 		} else if (e.keyCode === 37) {
@@ -282,8 +287,6 @@ function _game()
 		}
 		if (e.keyCode === 38 || e.keyCode === 13) {
 			hero.jump();
-		} else if (e.keyCode === 40) {
-			key.down = true;
 		}
 	}
 

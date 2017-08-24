@@ -9,18 +9,28 @@ html {
 .mobileControls {
     height: 0%;
     display: none;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: white;
+
+}
+button {
+    text-decoration: none;
+    height: 100%;
+    width: 30%;
+    background-color: #4286f4;
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 750px) {
 
     .board {
-        height: 80%;
+        height: 90%;
     }
     .mobileControls {
-        height: 20%;
-        display: inline-block;
+        height: 10%;
+        display: flex;;
         z-index: 100;
-        background-color: black;
     }
 
 }
