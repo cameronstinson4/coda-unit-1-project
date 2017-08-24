@@ -3,18 +3,12 @@ var		HERO_IMAGE = 'assets/dog.png',
 		PLATFORM_IMAGE = 'assets/platform.png',
 		BACKGROUND_IMAGE = "assets/snow.png",
 		PARALLAX_IMAGE = "assets/snowflakes.png",
-		NPC_IMAGE = "assets/cat.png",
-		BASE_WIDTH = 800,
-		BASE_HEIGHT = 400,
-		GRID_HORIZONTAL = 8,
-		GRID_VERTICAL = 4;
+		NPC_IMAGE = "assets/cat.png";
 
 function _game()
 {
 	window.Game = this;
 	var self = this,
-		w = getWidth(),
-		h = getHeight(),
 		ticks = 0,
 		canvas,
  		assets = [],
@@ -33,9 +27,6 @@ function _game()
 		background,
 		npcs = [];
 
-	self.width = w;
-	self.height = h;
-
 	// holds all collideable objects
 	var collideables = [];
 	self.getCollideables = function() { return collideables; };
@@ -50,8 +41,8 @@ function _game()
 
 	}
 
-	var requestedAssets = 0,
-		loadedAssets = 0;
+	var requestedAssets = 0;
+	var loadedAssets = 0;
 	// loads the assets and keeps track 
 	// of how many assets where there to
 	// be loaded
@@ -78,8 +69,8 @@ function _game()
 
 		// creating the canvas-element
 		canvas = document.createElement('canvas');
-		canvas.width = w;
-		canvas.height = h;
+		canvas.width = getWidth();
+		canvas.height = getHeight();
 		document.getElementById("board").appendChild(canvas);
 
 		// initializing the stage
@@ -113,6 +104,8 @@ function _game()
 		createjs.Ticker.addEventListener("tick", this.tick);
 		createjs.Ticker.setFPS(60);
 	}
+
+	//Sets up listeners for keyboard and touch events
 	self.setupListeners = function() {
 		//Setup keyboard listeners
 		document.onkeydown = self.handleKeyDown;
@@ -126,9 +119,36 @@ function _game()
 			document.getElementById("right").addEventListener('touchend', function(e) { key.right = false });
 		}
 
-		document.getElementById("jump").addEventListener("click", function() { hero.jump()});
+		document.getElementById("jump").addEventListener("touchstart", function() { hero.jump()});
 
 	}
+
+	//Handles keydown events from the keyboard
+	self.handleKeyDown = function(e)
+	{
+		if (e.keyCode === 39) {
+			key.right = true;
+		} else if (e.keyCode === 37) {
+			key.left = true;
+		}
+		if (e.keyCode === 38) {
+			hero.jump();
+		}
+	}
+
+	//Handles keydown events from the keyboard
+	self.handleKeyUp = function(e)
+	{
+		if (e.keyCode === 39) {
+			key.right = false;
+		} else if (e.keyCode === 37) {
+			key.left = false;
+		}
+
+		keyDown = false;
+
+	}
+
 	self.createStartingPlatform = function() {
 
 	}
@@ -137,27 +157,30 @@ function _game()
 		collideables = [];
 		self.lastPlatform = null;
 		world.removeAllChildren();
-		world.x = world.y = 0;
+		world.x = 0;
+		world.y = 0;
 
-		hero.x = 150 ;
-		hero.y = h/2 + 50;
+		hero.x = 150;
+		hero.y = canvas.height/2 + 50;
 		hero.reset();
 		world.addChild(hero);
 		
 		for (var i = 0; i < npcs.length; i++) {
 			npcs[i].x = 150 ;
-			npcs[i].y = h/2 + 50;
+			npcs[i].y = canvas.height/2 + 50;
 			npcs[i].reset();
 			world.addChild(npcs[i]);
 		}
 
 		// add a platform for the hero to collide with
-		self.addPlatform(10, h/1.25);
+		self.addPlatform(10, canvas.height/1.25);
 
-		var c, l = w / (assets[PLATFORM_IMAGE].width * 1.5) + 2, atX=0, atY = h/1.25;
+		var length = canvas.width / (assets[PLATFORM_IMAGE].width * 1.5) + 2;
+		var atX = 0;
+		var atY = canvas.height/1.25;
 
-		for ( c = 1; c < l; c++ ) {
-			var atX = (c-.5) * assets[PLATFORM_IMAGE].width*2 + (Math.random()*assets[PLATFORM_IMAGE].width-assets[PLATFORM_IMAGE].width/2);
+		for ( let i = 1; i < length; i++ ) {
+			var atX = (i-.5) * assets[PLATFORM_IMAGE].width*2 + (Math.random()*assets[PLATFORM_IMAGE].width-assets[PLATFORM_IMAGE].width/2);
 			var atY = atY + (Math.random() * 300 - 150);
 			self.addPlatform(atX,atY);
 		}
@@ -165,17 +188,15 @@ function _game()
 
 	self.tick = function(e)
 	{
-		var c,p,l;
 
 		ticks++;
 		hero.tick();
 		for (var i = 0; i < npcs.length; i++) {
-			npcs[i].ticks = ticks;
 			npcs[i].tick();
 		}
 
 
-		if ( hero.y > h*3 ) {
+		if ( hero.y > canvas.height*3 ) {
 			self.reset();
 			return;
 		}
@@ -184,27 +205,25 @@ function _game()
 		// screenWidth * 0.3 and screenHeight * 0.3(to both ends)
 		// we will reposition the "world-container", so our hero
 		// is allways visible
-		if ( hero.x > w*.3 ) {
-			world.x = -hero.x + w*.3;
+		if ( hero.x > canvas.width*.3 ) {
+			world.x = -hero.x + canvas.width*.3;
 		}
-		if ( hero.y > h*.7 ) {
-			world.y = -hero.y + h*.7;
-		} else if ( hero.y < h*.3 ) {
-			world.y = -hero.y + h*.3;
+		if ( hero.y > canvas.height*.7 ) {
+			world.y = -hero.y + canvas.height*.7;
+		} else if ( hero.y < canvas.height*.3 ) {
+			world.y = -hero.y + canvas.height*.3;
 		}
 
-		l = collideables.length;
-		for ( c = 0; c < l; c++ ) {
-			p = collideables[c];
-			if ( p.localToGlobal(p.image.width,0).x < -10 ) {
-				self.movePlatformToEnd(p);
+		for ( var i = 0; i < collideables.length; i++ ) {
+			let c = collideables[i];
+			if ( c.localToGlobal(c.image.width,0).x < -10 ) {
+				self.movePlatformToEnd(c);
 			}
 		}
 	
 		hero.move(key.up, key.right, key.down, key.left);
 
-		score = hero.x - ticks;
-
+		score = hero.x;
 		scoreboard.text = "Score: " + score;
 
 		if (score > 10000) {
@@ -213,8 +232,6 @@ function _game()
 		
 		canvas.width = getWidth();
 		canvas.height = document.getElementById("board").offsetHeight;
-		w = canvas.width;
-		h = canvas.height;
 
 		self.updateBg();
 
@@ -246,6 +263,7 @@ function _game()
 		self.lastPlatform = platform;
 	}	
 
+	//Sets up the 2 images to create the parallax background
 	self.setupBg = function() {
 		var bg = new createjs.Container();
 		bg.snapToPixel = true;
@@ -263,6 +281,7 @@ function _game()
 		return bg;
 	}	
 
+	//Updates the images in the parallax background based on their position in the array
 	self.updateBg = function() {
 
 		for (var i = 0; i < background.children.length; i++) {
@@ -271,31 +290,7 @@ function _game()
 		}
 	}
 	
-
-	self.handleKeyDown = function(e)
-	{
-		if (e.keyCode === 39) {
-			key.right = true;
-		} else if (e.keyCode === 37) {
-			key.left = true;
-		}
-		if (e.keyCode === 38 || e.keyCode === 13) {
-			hero.jump();
-		}
-	}
-
-	self.handleKeyUp = function(e)
-	{
-		if (e.keyCode === 39) {
-			key.right = false;
-		} else if (e.keyCode === 37) {
-			key.left = false;
-		}
-
-		keyDown = false;
-
-	}
-
+	//Displays the win screen when the user wins
 	self.onWin = function() {
 		world.removeAllChildren();
 		stage.removeAllChildren();
