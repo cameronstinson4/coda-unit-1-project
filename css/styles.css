@@ -22,7 +22,7 @@ button {
     background-color: #4286f4;
 }
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 480px) {
 
     .board {
         height: 90%;
