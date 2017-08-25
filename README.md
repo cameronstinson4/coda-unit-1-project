@@ -3,6 +3,9 @@
 
 ## The Game:
     Dog Simulator is a 2d platformer created using HTML5 canvas and the EaselJS library.
+
+    Find the project on Github pages [here] (https://cameronstinson4.github.io/coda-unit-1-project/).
+    Find the Trellow board used to organize the project [here](https://trello.com/b/0KHBtY5l/unit-1-game).
 #### Game objective:
     Navigate over the various platforms by running and jumping to reach over 10,000 points.
 
@@ -41,4 +44,5 @@
 ## Successes and Challenges:
     * The Parallax background took a lot trial and error to actually work. Originally I tried to use CSS, but later realized just setting the images to backgound of canvas worked much better.
     * Character animations were a major struggle because it completely broke the collision detection. After a lot of trial and error some sort of animations were working but not consistently, and collision detection is also still iffy. 
+    * Pixel art creation was very difficult without a program like Photoshop or Illustrator. A lot of time was wasted trying to work around this issue.
 
