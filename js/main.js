@@ -153,6 +153,7 @@ function _game()
 
 	}
 
+	//Creates and displays the instructions for the game
 	self.showInstructions = function() {
 		var instructionsText = 
 		`Welcome to Dog Simulator\n
@@ -166,7 +167,8 @@ function _game()
 		instructions.y = canvas.height/4;
 		world.addChild(instructions);		
 	}
-
+	
+	//Creates and adds the starting platform to the world
 	self.createStartingPlatform = function() {
 		var startPlatform = new createjs.Bitmap(assets[START_PLATFORM_IMAGE]);
 		startPlatform.x = 0;
@@ -175,6 +177,7 @@ function _game()
 		world.addChild(startPlatform);
 	}
 
+	//Resets the game board
 	self.reset = function() {
 		self.paused = false;
 
@@ -216,6 +219,7 @@ function _game()
 		document.getElementById("reset").style.display = "none";
 	}
 
+	//The tick function that will run 60 times for per second
 	self.tick = function(e)
 	{
 
