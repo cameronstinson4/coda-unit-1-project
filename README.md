@@ -10,7 +10,6 @@ Find the Trellow board used to organize the project [here](https://trello.com/b/
 #### Game objective:
 <p>Navigate over the various platforms by running and jumping to reach over 10,000 points.<p/>
 
-Reference-style: 
 ![alt text][https://github.com/cameronstinson4/coda-unit-1-project/blob/master/assets/game.png?raw=true]
 
     
@@ -29,7 +28,6 @@ Reference-style:
 
 Please note mobile responsiveness only works on a mobile device's touch. It will not work on desktop with clicks.</p>
 
-Reference-style: 
 ![alt text][https://github.com/cameronstinson4/coda-unit-1-project/blob/master/assets/mobile.png?raw=true]
 
 ### Sprite Animations
