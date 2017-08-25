@@ -4,14 +4,14 @@
 ## The Game:
 <p>Dog Simulator is a 2d platformer created using HTML5 canvas and the EaselJS library.
 
-Find the project on Github pages [here] (https://cameronstinson4.github.io/coda-unit-1-project/).
+Find the project on Github pages [here](https://cameronstinson4.github.io/coda-unit-1-project/).
 Find the Trellow board used to organize the project [here](https://trello.com/b/0KHBtY5l/unit-1-game).</p>
 
 #### Game objective:
 <p>Navigate over the various platforms by running and jumping to reach over 10,000 points.<p/>
 
 Reference-style: 
-![alt text][assets/game.png]
+![alt text][https://github.com/cameronstinson4/coda-unit-1-project/blob/master/assets/game.png?raw=true]
 
     
 ## Approach:
@@ -30,7 +30,7 @@ Reference-style:
 Please note mobile responsiveness only works on a mobile device's touch. It will not work on desktop with clicks.</p>
 
 Reference-style: 
-![alt text][assets/mobile.png]
+![alt text][https://github.com/cameronstinson4/coda-unit-1-project/blob/master/assets/mobile.png?raw=true]
 
 ### Sprite Animations
 <p>Player character movement animations were achieved using the SpriteSheet object built into EaselJS.</p>
