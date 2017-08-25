@@ -24,6 +24,7 @@ var leftDog = function() {
                 frames: [6, 7, 8],
                 speed: 0.2
             }
+            
         }
     });
 
