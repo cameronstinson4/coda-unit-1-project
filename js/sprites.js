@@ -8,6 +8,10 @@ var rightDog = function() {
             run: {
                 frames: [7, 8, 9],
                 speed: 0.2
+            },
+            jump: {
+                frames: [12],
+                speed: 0.2
             }
         }
     });
@@ -23,8 +27,11 @@ var leftDog = function() {
             run: {
                 frames: [6, 7, 8],
                 speed: 0.2
+            },
+            jump: {
+                frames: [12, 14],
+                speed: 0.2
             }
-            
         }
     });
 

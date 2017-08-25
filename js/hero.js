@@ -38,6 +38,8 @@
 			if ( this.onGround ) {
 				this.onGround = false;
 				this.doubleJump = true;
+				this.gotoAndPlay("jump");
+
 			}
 		} else {
 			// the hero can only be 'onGround'
@@ -46,7 +48,10 @@
 			if ( moveBy.y >= 0 ) {
 				this.onGround = true;
 				this.doubleJump = false;
+				this.gotoAndPlay("run");
+
 			}
+
 			this.velocity.y = 0;
 		}
 
