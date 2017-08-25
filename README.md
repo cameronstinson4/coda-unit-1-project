@@ -8,10 +8,10 @@ Find the project on Github pages [here] (https://cameronstinson4.github.io/coda-
 Find the Trellow board used to organize the project [here](https://trello.com/b/0KHBtY5l/unit-1-game).</p>
 
 #### Game objective:
-<p>Navigate over the various platforms by running and jumping to reach over 10,000 points.
+<p>Navigate over the various platforms by running and jumping to reach over 10,000 points.<p/>
 
 Reference-style: 
-![alt text][assets/game.png]<p/>
+![alt text][assets/game.png]
 
     
 ## Approach:
@@ -27,10 +27,11 @@ Reference-style:
 ### Mobile Responsive
 <p>Mobile responsiveness was achieved by adding a CSS media query which adds movement buttons when the screen is cell phone sized.
 
+Please note mobile responsiveness only works on a mobile device's touch. It will not work on desktop with clicks.</p>
+
 Reference-style: 
 ![alt text][assets/mobile.png]
 
-Please note mobile responsiveness only works on a mobile device's touch. It will not work on desktop with clicks.</p>
 ### Sprite Animations
 <p>Player character movement animations were achieved using the SpriteSheet object built into EaselJS.</p>
 
