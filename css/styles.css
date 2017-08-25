@@ -22,8 +22,19 @@ button {
     background-color: #4286f4;
     border: none;
     margin: .25em;
+    font-family: "VT323";
+    font-size: 25px;
 }
+#reset {
+    position: absolute;
+    left: 47.5%;
+    top: 55%;
+    width:15%;
+    height: 10%;
+    float:left;
+    display: none;
 
+}
 @media only screen and (max-width: 480px) {
 
     .board {
@@ -36,47 +47,3 @@ button {
     }
 
 }
-
-/*
-body { 
-    margin:0;
-    padding:0;
-    perspective: 100px;
-    transform-style: preserve-3d;
-    height: 100%;
-    width: 100%;
-    overflow-y: hidden;
-    overflow-x: scroll;
-    color: white;
-}
-
-.world {
-    position: relative;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    transform-style: inherit;
-    transform: translateZ(0px);
-    z-index: 0;
-    background-size: 100% / cover;
-}
-
-.depth5 {
-    transform: translateZ(5px);
-    z-index: 5;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255,0,0,0.1);
-    background:url("../assets/snow.png") 80% 0;
-}
-.depth10 {
-    transform: translateZ(10px);
-    z-index: 10;
-    width: 100%;
-    height: 100%;
-    background:url("../assets/snowflakes.png") 0 0;
-
-}
-*/
-

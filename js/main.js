@@ -29,7 +29,9 @@ function _game()
 		scoreboard,
 		background,
 		npcs = [],
-		platforms = [];
+		platforms = [],
+		paused = false,
+		win;
 
 	// holds all collideable objects
 	var collideables = [];
@@ -94,13 +96,14 @@ function _game()
 
 		self.reset();
 
-		scoreboard = new createjs.Text("Score: ", "20px Courier New", "#0000ff");
+		scoreboard = new createjs.Text("Score: ", "25px VT323", "#0000ff");
 		scoreboard.x = 10;
 		scoreboard.y = 20;
 		scoreboard.textBaseline = "alphabetic";
 		stage.addChild(scoreboard);
 	
 		self.setupListeners();
+		self.showInstructions();
 
 		createjs.Ticker.addEventListener("tick", this.tick);
 		createjs.Ticker.setFPS(60);
@@ -121,7 +124,7 @@ function _game()
 		}
 
 		document.getElementById("jump").addEventListener("touchstart", function() { hero.jump()});
-
+		document.getElementById("reset").addEventListener("click", self.reset);
 	}
 
 	//Handles keydown events from the keyboard
@@ -150,6 +153,20 @@ function _game()
 
 	}
 
+	self.showInstructions = function() {
+		var instructionsText = 
+		`Welcome to Dog Simulator\n
+		Use the right and left arrow keys ( \u02C2 \u02C3 ) to move Professor Doctor Woofbark Dogbone.\n
+		Use the up arrow key ( \u02C4 ) to jump over obstacles.\n
+		Use jump twice ( \u02C4 \u02C4 ) to double jump!\n
+		Score 10,000 points to succeed!`;
+
+		let instructions = new createjs.Text(instructionsText, "25px VT323", "#0000ff");
+		instructions.x = canvas.width/10;
+		instructions.y = canvas.height/4;
+		world.addChild(instructions);		
+	}
+
 	self.createStartingPlatform = function() {
 		var startPlatform = new createjs.Bitmap(assets[START_PLATFORM_IMAGE]);
 		startPlatform.x = 0;
@@ -159,6 +176,10 @@ function _game()
 	}
 
 	self.reset = function() {
+		self.paused = false;
+
+		stage.removeChild(win);
+
 		collideables = [];
 		self.lastPlatform = null;
 		world.removeAllChildren();
@@ -191,47 +212,51 @@ function _game()
 			var atY = atY + (Math.random() * 300 - 150);
 			self.addPlatform(atX,atY);
 		}
+
+		document.getElementById("reset").style.display = "none";
 	}
 
 	self.tick = function(e)
 	{
 
-		ticks++;
-		hero.tick();
-		for (var i = 0; i < npcs.length; i++) {
-			npcs[i].tick();
-		}
+		if (!self.paused) {
+			ticks++;
+			hero.tick();
+			for (var i = 0; i < npcs.length; i++) {
+				npcs[i].tick();
+			}
 
 
-		if ( hero.y > canvas.height*3 ) {
-			self.reset();
-			return;
-		}
+			if ( hero.y > canvas.height*3 ) {
+				self.reset();
+				return;
+			}
 
-		self.adjustCamera();
+			self.adjustCamera();
 
-		for ( var i = 0; i < platforms.length; i++ ) {
-			let c = platforms[i];
-			if ( c.localToGlobal(c.image.width,0).x < -10 ) {
-				self.movePlatformToEnd(c);
+			for ( var i = 0; i < platforms.length; i++ ) {
+				let c = platforms[i];
+				if ( c.localToGlobal(c.image.width,0).x < -10 ) {
+					self.movePlatformToEnd(c);
+				}
+			}
+		
+			hero.move(key.up, key.right, key.down, key.left);
+
+			score = hero.x - 150;
+			scoreboard.text = "Score: " + score;
+			
+			canvas.width = getWidth();
+			canvas.height = document.getElementById("board").offsetHeight;
+
+			self.updateBg();
+
+			stage.update();
+
+			if (score > 10000) {
+				self.onWin();
 			}
 		}
-	
-		hero.move(key.up, key.right, key.down, key.left);
-
-		score = hero.x;
-		scoreboard.text = "Score: " + score;
-
-		if (score > 10000) {
-			self.onWin();
-		}
-		
-		canvas.width = getWidth();
-		canvas.height = document.getElementById("board").offsetHeight;
-
-		self.updateBg();
-
-		stage.update();
 	}
 
 	self.adjustCamera = function() {
@@ -306,15 +331,16 @@ function _game()
 	
 	//Displays the win screen when the user wins
 	self.onWin = function() {
-		world.removeAllChildren();
-		stage.removeAllChildren();
-		let win = new createjs.Text("You Win!", "20px Courier New", "#0000ff");
+		win = new createjs.Text("You Win!", "25px VT323", "#0000ff");
 		win.x = canvas.width/2;
 		win.y = canvas.height/2;
 		stage.addChild(win);
+		
 		stage.update();
-		stage.tickEnabled = false;
+		self.paused = true;
+		document.getElementById("reset").style.display = "block";
 	}
+	
 
 	self.preloadResources();
 	
