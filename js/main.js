@@ -1,6 +1,5 @@
 
-var		HERO_IMAGE = 'assets/dog.png',
-		PLATFORM_IMAGE = 'assets/cobble-platform.png',
+var		PLATFORM_IMAGE = 'assets/cobble-platform.png',
 		BACKGROUND_IMAGE = "assets/snow.png",
 		PARALLAX_IMAGE = "assets/snowflakes.png",
 		NPC_IMAGE = "assets/cat.png";
@@ -21,9 +20,7 @@ function _game()
 		keyDown = false,
 		key = {
           right: false,
-          left: false,
-          up: false,
-          down: false
+          left: false
 		}, 
 		score = 0,
 		scoreboard,
@@ -39,7 +36,6 @@ function _game()
 
 	// starts to load all the assets
 	self.preloadResources = function() {
-		self.loadImage(HERO_IMAGE);
 		self.loadImage(PLATFORM_IMAGE);
 		self.loadImage(BACKGROUND_IMAGE);
 		self.loadImage(PARALLAX_IMAGE);
@@ -96,6 +92,7 @@ function _game()
 
 		self.reset();
 
+		//Set up scoreboard
 		scoreboard = new createjs.Text("Score: ", "25px VT323", "#0000ff");
 		scoreboard.x = 10;
 		scoreboard.y = 20;
@@ -135,7 +132,7 @@ function _game()
 		} else if (e.keyCode === 37) {
 			key.left = true;
 		}
-		if (e.keyCode === 38) {
+		if (e.keyCode === 38 || e.keyCode === 13) {
 			hero.jump();
 		}
 	}
@@ -245,7 +242,7 @@ function _game()
 				}
 			}
 		
-			hero.move(key.up, key.right, key.down, key.left);
+			hero.move(key.right, key.left);
 
 			score = hero.x - 150;
 			scoreboard.text = "Score: " + score;
@@ -345,7 +342,6 @@ function _game()
 		document.getElementById("reset").style.display = "block";
 	}
 	
-
 	self.preloadResources();
 	
 };
